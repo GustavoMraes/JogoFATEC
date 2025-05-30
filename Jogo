@@ -104,7 +104,7 @@ def AtualizarVida(delta):
 # JOGO ======================================
 
 def Creditos():
-    participantes = ["Gustavo Henrique de Moraes", "ChatGPT"]
+    participantes = ["Gustavo Henrique de Moraes", "ChatGPT", "Nathan Nagano", "Lorenzzo Paulelli"]
     participantes.sort()
     LimparTela()
     PosicionarCursorNaLinha(max(2, altura // 4))
@@ -145,21 +145,24 @@ def Menu():
         print("-" * CentralizarTerminal)
         print("Encerrando o jogo".center(CentralizarTerminal))
         print("-" * CentralizarTerminal)
-
+    
 def Jogo():
     
-    AtualizarLocal("Saguão")
+    AtualizarLocal("???")
     LimparTela()
     AtualizarDialogo("\nBoa noite!\nHoje é sexta-feira 13. (13/06/2025)\n\nVocê acorda com alguns arranhões no braço, ao som de gritos distantes.")
     EsperarContinue()
-    AtualizarDialogo("Você olha ao lado, David Tsai conversa baixo com Dagoberto, escondidos atrás das escadas do bloco Santiago")
+    AtualizarDialogo("Você olha em volta. Você se encontra em uma sala de aula. Uma sala que, um dia, você usava para estudar.\nÉ possível ver algumas carteiras reviradas, janelas trincadas e manchas em diversos locais.")
     EsperarContinue()
-    AtualizarDialogo("Dá ideia de como continua o jogo aí gente!!")
-    EsperarContinue()
-
-
-
-    
+    AtualizarDialogo("Você nota algumas áreas de interesse. É possível inspecionar:\n1) Mesa do professor\n2) Carteiras\n3) Olhar pelas janelas")
+    inspecionar = ReceberValor(int, 3)
+    if (inspecionar == 1):
+        print("a")
+    elif (inspecionar == 2):
+        AtualizarDialogo("Você ve que ta escuro, e consegue perceber agora, está em alguma sala do bloco B")
+        AtualizarLocal("Bloco B")
+    else:
+        print("A")
 
 
 # EXECUÇÃO
