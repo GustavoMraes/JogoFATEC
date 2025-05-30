@@ -1,0 +1,166 @@
+import shutil
+import os
+import time
+
+# VARIÁVEIS GLOBAIS ==========================
+terminal_size = shutil.get_terminal_size()
+largura = terminal_size.columns
+altura = terminal_size.lines
+CentralizarTerminal = largura
+
+VidaMaxima = 10
+VidaAtual = 8
+LocalAtual = "Saguão"
+DialogoAtual = "Você acorda ao som de gritos e horror."
+
+# FUNÇÕES GLOBAIS ===========================
+
+def AtualizarTerminalSize():
+    global terminal_size, largura, altura, CentralizarTerminal
+    terminal_size = shutil.get_terminal_size()
+    largura = terminal_size.columns
+    altura = terminal_size.lines
+    CentralizarTerminal = largura
+
+def LimparTela():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def EsperarContinue():
+    input("\nPressione ENTER para continuar...")
+
+def PularLinhas(qtd=1):
+    for _ in range(qtd):
+        print()
+
+def PosicionarCursorNaLinha(linha: int, coluna: int = 1):
+    print(f"\033[{linha};{coluna}H", end="")
+
+def ReceberValor(tipo_esperado: str, valor_maximo: int = None):
+    while True:
+        entrada = input("Digite o valor: ").strip()
+        if tipo_esperado.lower() == "int":
+            if not entrada.isdigit():
+                print("❌ Valor inválido. Digite um número inteiro.")
+                continue
+            valor = int(entrada)
+            if valor_maximo is not None and valor > valor_maximo:
+                print(f"❌ Valor acima do permitido. Máximo: {valor_maximo}.")
+                continue
+            return valor
+        elif tipo_esperado.lower() == "float":
+            try:
+                valor = float(entrada)
+                if valor_maximo is not None and valor > valor_maximo:
+                    print(f"❌ Valor acima do permitido. Máximo: {valor_maximo}.")
+                    continue
+                return valor
+            except ValueError:
+                print("❌ Valor inválido. Digite um número decimal.")
+        elif tipo_esperado.lower() == "str":
+            if entrada == "":
+                print("❌ Valor vazio. Digite algum texto.")
+                continue
+            return entrada
+        else:
+            print("❌ Tipo não reconhecido.")
+            return None
+
+# HUD =======================================
+
+def DesenharHUD():
+    AtualizarTerminalSize()
+    LimparTela()
+    PosicionarCursorNaLinha(1, 1)
+    print(" " * largura)
+    print(" " * largura)
+    print(" " * largura)
+
+    PosicionarCursorNaLinha(1, 1)
+    print(f" Local: {LocalAtual}")
+
+    vida_bar = f"{'█' * VidaAtual}{'.' * (VidaMaxima - VidaAtual)}"
+    vida_texto = f"❤️ Vida: [{vida_bar}] {VidaAtual}/{VidaMaxima}"
+    PosicionarCursorNaLinha(1, largura - len(vida_texto) + 1)
+    print(vida_texto)
+
+    PosicionarCursorNaLinha(3, 1)
+    print(DialogoAtual.center(CentralizarTerminal))
+
+def AtualizarDialogo(texto):
+    global DialogoAtual
+    DialogoAtual = texto
+    DesenharHUD()
+
+def AtualizarLocal(novo_local):
+    global LocalAtual
+    LocalAtual = novo_local
+    DesenharHUD()
+
+def AtualizarVida(delta):
+    global VidaAtual
+    VidaAtual = max(0, min(VidaMaxima, VidaAtual + delta))
+    DesenharHUD()
+
+# JOGO ======================================
+
+def Creditos():
+    participantes = ["Gustavo Henrique de Moraes", "ChatGPT"]
+    participantes.sort()
+    LimparTela()
+    PosicionarCursorNaLinha(max(2, altura // 4))
+
+    print("=" * CentralizarTerminal)
+    print("JOGO PRODUZIDO POR".center(CentralizarTerminal))
+    print("=" * CentralizarTerminal)
+    PularLinhas()
+
+    for nome in participantes:
+        print(f"• {nome}".center(CentralizarTerminal))
+
+    PularLinhas()
+    print("=" * CentralizarTerminal)
+    print("OBRIGADO POR JOGAR!".center(CentralizarTerminal))
+    print("=" * CentralizarTerminal)
+    EsperarContinue()
+
+def Menu():
+    LimparTela()
+    PosicionarCursorNaLinha(3)
+    print("-" * CentralizarTerminal)
+    print("SEXTA FEIRA 13 NA FATEC".center(CentralizarTerminal))
+    print("-" * CentralizarTerminal)
+    print("1. Iniciar jogo")
+    print("2. Créditos")
+    print("3. Sair")
+    print("-" * CentralizarTerminal)
+    PularLinhas()
+    opt = ReceberValor("Int", 3)
+
+    if opt == 1:
+        Jogo()
+    elif opt == 2:
+        Creditos()
+        Menu()
+    else:
+        print("-" * CentralizarTerminal)
+        print("Encerrando o jogo".center(CentralizarTerminal))
+        print("-" * CentralizarTerminal)
+
+def Jogo():
+    
+    AtualizarLocal("Saguão")
+    LimparTela()
+    AtualizarDialogo("\nBoa noite!\nHoje é sexta-feira 13. (13/06/2025)\n\nVocê acorda com alguns arranhões no braço, ao som de gritos distantes.")
+    EsperarContinue()
+    AtualizarDialogo("Você olha ao lado, David Tsai conversa baixo com Dagoberto, escondidos atrás das escadas do bloco Santiago")
+    EsperarContinue()
+    AtualizarDialogo("Dá ideia de como continua o jogo aí gente!!")
+    EsperarContinue()
+
+
+
+    
+
+
+# EXECUÇÃO
+Menu()
